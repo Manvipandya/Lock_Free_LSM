@@ -1,0 +1,12 @@
+Steps to setup ZeroMQ on the Machine
+
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+brew install zeromq
+clang --version
+brew install gcc
+brew install pkg-config
+
+find /usr/local -name libzmq.5.dylib
+export DYLD_LIBRARY_PATH=/usr/local/lib:$DYLD_LIBRARY_PATH
+echo 'export DYLD_LIBRARY_PATH=/usr/local/lib:$DYLD_LIBRARY_PATH' >> ~/.zshrc
+source ~/.zshrc

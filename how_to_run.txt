@@ -1,0 +1,2 @@
+g++ -std=c++11 -o lsm_tree k.cpp -lzmq && ./lsm_tree 
+g++ -std=c++11 -o lsm_tree_client client.cpp -lzmq && ./lsm_tree_client
