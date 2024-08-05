@@ -1,0 +1,30 @@
+module load cmake/3.22.2
+wget https://github.com/zeromq/libzmq/releases/download/v4.3.4/zeromq-4.3.4.tar.gz
+tar -xzvf zeromq-4.3.4.tar.gz
+cd zeromq-4.3.4
+mkdir build
+cd build
+cmake .. -DCMAKE_INSTALL_PREFIX=$HOME/zeromq
+make -j4
+make install
+
+
+git clone https://github.com/zeromq/cppzmq.git
+cd cppzmq
+mkdir build
+cd build
+cmake .. -DCPPZMQ_BUILD_TESTS=OFF -DCMAKE_INSTALL_PREFIX=$HOME/zeromq
+make install
+
+echo 'export LD_LIBRARY_PATH=$HOME/zeromq/lib:$LD_LIBRARY_PATH' >> ~/.bashrc
+echo 'export PKG_CONFIG_PATH=$HOME/zeromq/lib/pkgconfig:$PKG_CONFIG_PATH' >> ~/.bashrc
+echo 'export PATH=$HOME/zeromq/bin:$PATH' >> ~/.bashrc
+echo 'export CPLUS_INCLUDE_PATH=$HOME/zeromq/include:$CPLUS_INCLUDE_PATH' >> ~/.bashrc
+source ~/.bashrc
+
+g++ -std=c++11 -I/home/mp6813/zeromq/include -L/home/mp6813/zeromq/lib64 -Wl,-rpath=/home/mp6813/zeromq/lib64 -lzmq -o lsm_tree code.cpp
+./lsm_tree
+
+
+
+
