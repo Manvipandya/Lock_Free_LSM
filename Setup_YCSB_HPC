@@ -1,0 +1,43 @@
+SETUP YCSB
+
+(Update $HOME)
+
+wget https://download.oracle.com/java/17/latest/jdk-17_linux-x64_bin.tar.gz 
+tar -xzf jdk-17_linux-x64_bin.tar.gz
+echo 'export JAVA_HOME=$HOME/jdk-17' >> ~/.bashrc
+echo 'export PATH=$JAVA_HOME/bin:$PATH' >> ~/.bashrc
+source ~/.bashrc
+
+wget https://archive.apache.org/dist/maven/maven-3/3.8.6/binaries/apache-maven-3.8.6-bin.tar.gz 
+tar -xzf apache-maven-3.8.6-bin.tar.gz
+
+echo 'export MAVEN_HOME=$HOME/apache-maven-3.8.6' >> ~/.bashrc
+echo 'export PATH=$MAVEN_HOME/bin:$PATH' >> ~/.bashrc
+source ~/.bashrc
+
+git clone https://github.com/brianfrankcooper/YCSB.git 
+cd YCSB
+mvn clean package
+	
+wget https://github.com/facebook/rocksdb/archive/refs/tags/v6.29.3.tar.gz 
+tar -xzf v6.29.3.tar.gz 
+cd rocksdb-6.29.3
+
+make shared_lib
+
+echo 'export ROCKSDB_HOME=$HOME/rocksdb-6.29.3' >> ~/.bashrc 
+echo 'export LD_LIBRARY_PATH=$ROCKSDB_HOME:$LD_LIBRARY_PATH' >> ~/.bashrc 
+source ~/.bashrc
+
+
+cd $HOME/YCSB 
+mvn -pl site.ycsb:rocksdb-binding -am clean package
+
+echo $JAVA_HOME 
+java -version
+
+mvn -pl site.ycsb:rocksdb-binding -am package -DskipTests
+mkdir -p $HOME/rocksdb-data
+
+./bin/ycsb load rocksdb -P workloads/workloada -p rocksdb.dir=$HOME/rocksdb-data 
+./bin/ycsb run rocksdb -P workloads/workloada -p rocksdb.dir=$HOME/rocksdb-data
